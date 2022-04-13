@@ -12,7 +12,7 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_fron
 mouth = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_mcs_mouth.xml')
 eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye.xml")
 
-bw_threshold = 100 ## Entre 80 et 105 en fonction de la luminosité
+bw_threshold = 105 ## Entre 80 et 105 en fonction de la luminosité
 
 font = cv2.FONT_HERSHEY_DUPLEX
 org = (50, 100)
@@ -38,7 +38,7 @@ while 1:
     (thresh, black_and_white) = cv2.threshold(gray, bw_threshold, 255, cv2.THRESH_BINARY)
     #cv2.imshow('black_and_white', black_and_white)
     ## Détection visage
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 30)
 
     # Pas de visage trouvé
     if(len(faces) == 0):
@@ -46,11 +46,11 @@ while 1:
     else: # visage trouvé
         # Dessin du rectangle autour du visage
         for (x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 0), 2)
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 0), 1)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
 
-            eyes = eye_cascade.detectMultiScale(roi_gray)
+            eyes = eye_cascade.detectMultiScale(roi_gray, 1.1, 25)
         for (ex, ey, ew, eh) in eyes:
             ptA = (ex, ey)
             ptB = (ex+ew, ey+eh)
