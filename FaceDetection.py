@@ -12,7 +12,7 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_fron
 mouth = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_mcs_mouth.xml')
 eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye.xml")
 
-bw_threshold = 105 ## Entre 80 et 105 en fonction de la luminosité
+bw_threshold = 100 ## Entre 80 et 105 en fonction de la luminosité
 
 font = cv2.FONT_HERSHEY_DUPLEX
 org = (50, 100)
@@ -50,7 +50,7 @@ while 1:
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
 
-            eyes = eye_cascade.detectMultiScale(roi_gray, 1.1, 25)
+            eyes = eye_cascade.detectMultiScale(roi_gray, 1.1, 30)
         for (ex, ey, ew, eh) in eyes:
             ptA = (ex, ey)
             ptB = (ex+ew, ey+eh)
