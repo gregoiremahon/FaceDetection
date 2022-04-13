@@ -4,6 +4,8 @@
 
 ## Importing dependencies --> Install : <pip install opencv-python>
 import cv2 
+import math
+import numpy as np
 
 ## face_cascade XML file
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_frontalface_default.xml')
@@ -20,7 +22,13 @@ font_scale = 4
 cv2.namedWindow("local webcam (ESC to kill)")
 cap = cv2.VideoCapture(0)
 weared_mask="mask"
+def midpoint(ptA, ptB):
+                return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
+def calculateDistance(ex,ey,ew,eh):
+                 dist = math.sqrt((ex - ew)**2 + (ey - eh)**2)
+                 distanceEyes = dist
+                 return dist
 while 1:
     ret, img = cap.read()
     img = cv2.flip(img,1)
@@ -44,11 +52,18 @@ while 1:
 
             eyes = eye_cascade.detectMultiScale(roi_gray)
         for (ex, ey, ew, eh) in eyes:
-            cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
-            EyesDist = ex-ey
-            print(EyesDist)
-         
+            ptA = (ex, ey)
+            ptB = (ex+ew, ey+eh)
+            cv2.rectangle(roi_color, ptA, ptB, (0, 255, 0), 2)
+            midpoint(ptA,ptB)
+            print(calculateDistance(ex,ey,ew,eh))
 
+                 
+          
+    
+            
+        
+         
     ## Affichage image colorée finale
     cv2.imshow('Face Detection',img)
 
