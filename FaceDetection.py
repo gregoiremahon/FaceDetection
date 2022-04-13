@@ -2,11 +2,13 @@
 
 ## Face detection
 
-## Importing dependencies
-import cv2
+## Importing dependencies --> Install : <pip install opencv-python>
+import cv2 
 
 ## face_cascade XML file
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_frontalface_default.xml')
+mouth = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_mcs_mouth.xml')
+eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye.xml")
 
 bw_threshold = 100 ## Entre 80 et 105 en fonction de la luminosité
 
@@ -17,6 +19,7 @@ thickness = 3
 font_scale = 4
 cv2.namedWindow("local webcam (ESC to kill)")
 cap = cv2.VideoCapture(0)
+weared_mask="mask"
 
 while 1:
     ret, img = cap.read()
@@ -35,13 +38,22 @@ while 1:
     else: # visage trouvé
         # Dessin du rectangle autour du visage
         for (x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 0), 4)
-            break
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 0), 2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]
+
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+        for (ex, ey, ew, eh) in eyes:
+            cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+            EyesDist = ex-ey
+            print(EyesDist)
+         
 
     ## Affichage image colorée finale
     cv2.imshow('Face Detection',img)
+
     k = cv2.waitKey(30) & 0xff
-    if k == 27:
+    if k == 27: #exit on ESC 
         break
 
 # Release video
